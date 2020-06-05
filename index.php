@@ -22,84 +22,51 @@
 
     <table class="table table-striped table-hover">
 
-
-            <!-- <div class="panel-heading">
-                <a data-toggle="collapse" href="#collapse1">Collapsible panel</a>
-            </div>
-            <div id="collapse1" class="panel-collapse collapse">
-
-            </div> -->
-
       <?php
-      $d = getcwd();
+      $d = getcwd();   //dossier courant C:\wamp64\www\alexa\files-explorer'
+      $doss_courant = explode(DIRECTORY_SEPARATOR, getcwd());
+      // array (size=5)
+      //   0 => string 'C:' (length=2)
+      //   1 => string 'wamp64' (length=6)
+      //   2 => string 'www' (length=3)
+      //   3 => string 'alexa' (length=5)
+      //   4 => string 'files-explorer' (length=14)
+
       $dir = scandir($d);
-      //var_dump($dir);
+      //var_dump($d);
 
       foreach ($dir as $value){
         //echo $value . "</br>";
 
          if( is_dir("$value") ) {
-           echo "<tr class=\"panel-heading\">
-                <a data-toggle=\"collapse\" href=\"#collapse1\"></a>
+           $chem = $d."/".$value;
+
+           //var_dump($chem);
+           echo "<tr>
                 <td><i class=\"fas fa-folder x3\"></i></td>
-                <td><a data-toggle=\"collapse\" href=\"#collapse1\"></a>$value</td>
+                <td><a href=\"$chem\">$value</a></td>
                 </tr>";
 
                 $list_dir[] = array();
-                if (!empty($value) && ($value !== '.') && ($value !== '..') ) {
+                if (!empty($value)) { //&& ($value !== '.') && ($value !== '..')
                   array_push ($list_dir,"$value");
-                  //var_dump($list_dir);
+                  var_dump($list_dir);
                 }
 
               }
-              $list_dir = array_filter($list_dir);
-              //var_dump($list_dir);
-
-              foreach ($list_dir as $val) {
-                //var_dump($val);
-                //var_dump($d);
-                $path = $d."/".$val;
-                var_dump($path);
-                $new_path = chdir($path);
-                var_dump($new_path);
-                $dc = getcwd();
-                $dirc = scandir($dc);
-                var_dump($dirc);
-
-                if( is_dir("$val") ){
-                  echo "<tr id=\"collapse1\" class=\"panel-collapse collapse\">
-                       <td><i class=\"fas fa-folder x3\"></i></td>
-                       <td><a data-toggle=\"collapse\" href=\"#collapse11\"></a>$val</td>
-                       </tr>";
-                       $list_dir_n1[] = array();
-                         if (!empty($val) && ($val !== '.') && ($val !== '..') ) {
-                         array_push ($list_dir_n1,"$val");
-                         var_dump($list_dir);
-                       }
-                }
-
-                if( is_file("$val") ){
-                  echo "<tr>
-                         <td><i class=\"fas fa-file x3\"></i></td>
-                         <td><a href:\"$val\">$val</td>
-                         <td> size : ".filesize($val)." bytes
-                       </tr>";
-                 }
-              }
-
-
 
          if( is_file("$value") ){
+           $chem = $d."/".$value;
+           var_dump($chem);
            echo "<tr>
                   <td><i class=\"fas fa-file x3\"></i></td>
-                  <td><a href:\"$value\">$value</td>
-                  <td> size : ".filesize($value)." bytes
+                  <td><a href=\"$chem\">$value</a></td>
+                  <td>size : ".filesize($value)."bytes</td>
+                  <td>".fileowner($value)."</td>
                 </tr>";
           }
+
         }
-
-
-
       ?>
     </table>
   </body>
