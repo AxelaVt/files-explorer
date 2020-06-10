@@ -19,28 +19,34 @@
   <table class="table table-striped table-hover">
   <?php
 
+  //redirige vers le dossier séletionné
   if(isset($_POST['selected'])){
     $dir = scandir($_POST['selected']);
-    if(chdir($_POST['selected'])){  //si un dossier est sélectionné aller vers ce dossier
+    if(chdir($_POST['selected'])){  //si un dossier est sélectionné, aller vers ce dossier
       chdir($_POST['selected']);
     }else{
       chdir(getcwd());
     }
+    var_dump($_POST['selected']);
+  }
 
+  $d = getcwd();
+  var_dump($d);
 
-    if (!empty($_POST{'envoyer'})) {
-      $new_dir = $_POST['New_dir'];
-      if(!file_exists($d."/".$new_dir)){
-        mkdir($d."/".$new_dir,0777,true);
-      }
+  if (!empty($_POST['envoyer'])) {
+    $dy = $d;
+    $new_dir = $_POST['New_dir'];
+    $new_dir = trim($new_dir);  //supprime les espaces
+    var_dump($new_dir);
+    if(!file_exists($dy.DIRECTORY_SEPARATOR.$new_dir)){
+      echo $dy.DIRECTORY_SEPARATOR.$new_dir;
+      mkdir($dy.DIRECTORY_SEPARATOR.$new_dir,0777,true);
     }
   }
 
-
-    $d = getcwd();   //dossier courant C:\wamp64\www\alexa\files-explorer'
     $dir = scandir($d); //recup ce qu'il y a dans le rep courrant sous forme d'array
 
-    //Traitement
+    //Traitement et affichage
       foreach ($dir as $value){  //parcourt l'array
        if( is_dir(realpath("$value"))){   // verif si dossier ==> utiliser realpath
          //$chem = $d.DIRECTORY_SEPARATOR.$value;  // création du chemin rep courant + dossier
@@ -70,13 +76,12 @@
 
              }
         }
-
-
     ?>
 
-    <form class="" action="<?php //echo $_SERVER['PHP_SELF'];?>" method="post">
+    <form class="" action="" method="post">
+      <?//php echo $_SERVER['PHP_SELF'];?>
       <input type="text" name="New_dir" placeholder="créer">
-      <input type="text" name="New_dir" placeholder="supprimer">
+      <!-- <input type="text" name="Supp_dir" placeholder="supprimer"> -->
       <input type="submit" id ="envoyer" name="envoyer" value="envoyer">
     </form>
 
