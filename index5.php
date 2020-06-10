@@ -17,18 +17,29 @@
 
   <table class="table table-striped table-hover">
 
+
+
 <?php
+
 $d = getcwd();
-//$d = ("./"); // on this file dir
+
+if(!empty($_GET['link'])){
+  $fullpath = $d . DIRECTORY_SEPARATOR . $_GET['link'];
+  $d = scandir($fullpath);
+}
+else $fullpath = $d;
+echo "<h1>".$fullpath."</h1>";
+//$d = ("./"); // racine
+echo '<a href="'.$d.'">Root</a></div>';
 var_dump($d);
+var_dump($fullpath);
 
   if( ( $dh = opendir($d) ) !== null  ){
      while ( ( $file = readdir($dh) ) !== false  ){
        if (is_dir ($file)){
         echo "<tr> $file
-             <td><i class=\"fas fa-folder x3\"></i></td>    
-             <td><a href=\"index5.php?link=\".$file\">$file</a></td>
-
+             <td><i class=\"fas fa-folder x3\"></i></td>
+             <td><a href=".$_SERVER['PHP_SELF'].'?link='.$file.">.$file.</a></td>
              <td>size : ".filesize($file)." bytes</td>
              <td>" .mime_content_type($file)."</td>
              <td>".fileowner($file)."</td>
@@ -46,8 +57,6 @@ var_dump($d);
             }
      }
  }
- $fullpath = $d . DIRECTORY_SEPARATOR . $file;
-  var_dump($fullpath);
 
 
 
