@@ -17,48 +17,62 @@
 
   <table class="table table-striped table-hover">
 
-
-
 <?php
 
-$d = getcwd();
 
-if(!empty($_GET['link'])){
-  $fullpath = $d . DIRECTORY_SEPARATOR . $_GET['link'];
-  $d = scandir($fullpath);
-}
-else $fullpath = $d;
-echo "<h1>".$fullpath."</h1>";
-//$d = ("./"); // racine
-echo '<a href="'.$d.'">Root</a></div>';
+$root = "" ; //racine sert uniquement à l'affichage
+//$_GET['link']="";
+$d = 'C:\wamp64\www\alexa\files-explorer'; // variable contenant le chemin de la racine
+$aff = $root . DIRECTORY_SEPARATOR;
+$fullpath = $d . DIRECTORY_SEPARATOR; // chemin variable en fonction de l'élément cliqué
+
+
+
 var_dump($d);
 var_dump($fullpath);
+var_dump($_SERVER['PHP_SELF']);
 
-  if( ( $dh = opendir($d) ) !== null  ){
-     while ( ( $file = readdir($dh) ) !== false  ){
-       if (is_dir ($file)){
-        echo "<tr> $file
-             <td><i class=\"fas fa-folder x3\"></i></td>
-             <td><a href=".$_SERVER['PHP_SELF'].'?link='.$file.">.$file.</a></td>
-             <td>size : ".filesize($file)." bytes</td>
-             <td>" .mime_content_type($file)."</td>
-             <td>".fileowner($file)."</td>
-             </tr>";
-            }
-            else {
-            echo  "<tr>
-                   <td><i class=\"fas fa-file x3\"></i></td>
-                   <td><form method='POST'><input type='hidden' name='selected' value=".realpath($file)."/>
-                   <a href=".realpath($file).">$file</a></form></td>
-                   <td>size :".filesize($file)."bytes</td>
-                   <td>".mime_content_type($file)."</td>
-                   <td>".fileowner($file)."</td>
-                   </tr>";
-            }
+if( empty($_GET['link']) ){
+    $fullpath = $d;
+  } else {
+    $fullpath = $d . DIRECTORY_SEPARATOR . $_GET['link'];
+    $aff = $root . DIRECTORY_SEPARATOR . $_GET['link'];
+    var_dump($fullpath);
+    var_dump($_GET['link']);
+  }
+
+  echo "<h1>".$aff."</h1>";//variable d'affichage chemin
+  echo '<a href="'.$_SERVER['PHP_SELF'].'?link='.$root.'">Root</a></div>'; //revenir à la racine
+
+var_dump($fullpath);
+if (is_dir($fullpath)){
+  $dh = opendir($fullpath);
+  if($dh !== null ){
+
+     while ( ( $file = readdir($dh) ) !== false ){
+       if ($file != "." && $file != ".."){
+         if (is_dir ($file)) {
+          echo "<tr>
+               <td><i class=\"fas fa-folder x3\"></i></td>
+               <td><a href=".$_SERVER['PHP_SELF'].'?link='.$file.">$file</a></td>
+
+               </tr>";
+              }
+              else if (is_file ($file)) {
+              echo  "<tr>
+                     <td><i class=\"fas fa-file x3\"></i></td>
+                     <td><a href=".$_SERVER['PHP_SELF'].'?link='.$file.">$file</a></td>
+
+                     </tr>";
+              }
+       }
      }
- }
-
-
+   }
+   closedir($dh);
+}
+// <td>size :".filesize($file)."bytes</td>
+// <td>".mime_content_type($file)."</td>
+// <td>".fileowner($file)."</td>
 
 
 ?>
